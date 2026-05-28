@@ -1,0 +1,6 @@
+@TasteRevAPI_HostAddress = http://localhost:5208
+
+GET {{TasteRevAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
