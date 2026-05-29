@@ -56,8 +56,8 @@ function ObtencionSeries({ serieId, verResenas, crearResena }) {
                                     >
                                         <img 
                                             src={serie.imagenUrl || "https://via.placeholder.com/300x400?text=Sin+Imagen"} 
-                                            className="img-fluid" 
-                                            style={{ height: '280px', width: '100%', objectFit: 'cover' }}
+                                            className="img-fluid w-100 h-100" 
+                                            style={{ objectFit: 'cover', minHeight: '250px' }} 
                                             alt={serie.titulo}
                                         />
                                     </div>

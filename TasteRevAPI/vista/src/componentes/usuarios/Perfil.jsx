@@ -56,16 +56,15 @@ function Perfil() {
 
     return (
         <div className="container mt-4 text-white">
-            <div className="row g-4">
+            <div className="row g-5">
                 
-                {/* Tarjeta de Perfil*/}
-                <div className="col-12 col-md-4 col-lg-3 text-center">
-                    <div className="card bg-dark border-secondary shadow-sm p-4">
+                <div className="col-12 col-md-4 col-lg-3 text-center pe-lg-4">
+                    <div className="card bg-dark border-secondary shadow-sm p-4 sticky-top" style={{ top: '20px' }}>
                         <img 
                             src={perfilUsuario.fotoPerfilUrl || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} 
                             alt="Perfil" 
                             className="rounded-circle img-fluid border border-secondary shadow mx-auto mb-3"
-                            style={{ width: "160px", height: "160px", objectFit: "cover" }}
+                            style={{ width: "120px", height: "120px", objectFit: "cover" }}
                         />
                         <h3 className="fw-bold text-info mb-1">{perfilUsuario.nombreUsuario}</h3>
                         <p className="text-muted small">📝 {resenasUsuario.length} reseñas publicadas</p>
@@ -94,7 +93,7 @@ function Perfil() {
                                 const serieInfo = series?.find(s => s.id === r.serieId);
 
                                 return (
-                                    <div key={r.id} className="card bg-dark text-white border-secondary shadow-sm overflow-hidden">
+                                    <div key={r.id} className="card bg-dark text-white border-secondary shadow-sm overflow-hidden mb-3">
                                         <div className="row g-0">
                                             {/*Imagen de la Serie*/}
                                             <div 
@@ -106,7 +105,7 @@ function Perfil() {
                                                     src={serieInfo?.imagenUrl || "https://via.placeholder.com/150"} 
                                                     alt={serieInfo?.titulo}
                                                     className="img-fluid w-100 h-100"
-                                                    style={{ objectFit: 'cover', minHeight: '120px' }}
+                                                    style={{ objectFit: 'cover' }} 
                                                 />
                                             </div>
                                             

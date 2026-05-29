@@ -20,7 +20,7 @@ function Layout() {
         <div className="d-flex" style={{ minHeight: '100vh', width: '100vw' }}>
             {/*MENÚ LATERAL (SIDEBAR)*/}
             <div 
-                className="bg-black border-end border-secondary d-flex flex-column"
+                className="bg-black border-end border-secondary d-flex flex-column transition-all flex-shrink-0"
                 style={{ 
                     width: menuAbierto ? '250px' : '70px', 
                     transition: 'width 0.3s ease',

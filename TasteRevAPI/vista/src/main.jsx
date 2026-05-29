@@ -7,6 +7,8 @@ import App from './App';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css'; // Debe ir al final
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 ReactDOM.createRoot(document.getElementById('root')).render(

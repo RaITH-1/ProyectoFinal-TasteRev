@@ -11,8 +11,8 @@ function ModificarResenaFormulario({ regresar, resenaId }) {
         id: res.id,
         calificacion: res.calificacion,
         comentario: res.comentario,
-        usuarioId: res.usuarioId,
-        serieId: res.serieId
+        usuarioId: res.usuarioId, 
+        serieId: res.serieId 
     });
 
     function guardar() {
@@ -36,20 +36,40 @@ function ModificarResenaFormulario({ regresar, resenaId }) {
     }
 
     return (
-        <div className="mt-3">
-            <label htmlFor="calificacion">Calificación (1-10):</label><br />
-            <input type="number" name="calificacion" id="calificacion" min="1" max="10" onChange={onChange} value={resena.calificacion} className="form-control mb-2" />
+        <div className="card bg-dark text-white border-secondary shadow-sm p-4 mt-3" style={{ maxWidth: "600px" }}>
             
-            <label htmlFor="comentario">Comentario:</label><br />
-            <textarea name="comentario" id="comentario" rows="3" onChange={onChange} value={resena.comentario} className="form-control mb-2" />
+            <div className="mb-3">
+                <label htmlFor="calificacion" className="form-label fw-bold text-info">Calificación (1-10):</label>
+                <input 
+                    type="number" 
+                    name="calificacion" 
+                    id="calificacion" 
+                    min="1" 
+                    max="10" 
+                    onChange={onChange} 
+                    value={resena.calificacion} 
+                    className="form-control bg-dark text-white border-secondary" 
+                />
+            </div>
             
-            <label htmlFor="usuarioId">ID del Usuario:</label><br />
-            <input type="number" name="usuarioId" id="usuarioId" onChange={onChange} value={resena.usuarioId} className="form-control mb-2" />
-
-            <label htmlFor="serieId">ID de la Serie:</label><br />
-            <input type="number" name="serieId" id="serieId" onChange={onChange} value={resena.serieId} className="form-control mb-2" />
+            <div className="mb-4">
+                <label htmlFor="comentario" className="form-label fw-bold text-info">Comentario:</label>
+                <textarea 
+                    name="comentario" 
+                    id="comentario" 
+                    rows="4" 
+                    onChange={onChange} 
+                    value={resena.comentario} 
+                    className="form-control bg-dark text-white border-secondary" 
+                />
+            </div>
             
-            <button className="btn btn-success" onClick={guardar}>Actualizar Cambios</button>
+            
+            <div className="d-flex gap-2">
+                <button className="btn btn-success" onClick={guardar}>💾 Actualizar Cambios</button>
+                <button className="btn btn-outline-light" onClick={regresar}>Cancelar</button>
+            </div>
+            
         </div>
     )
 }

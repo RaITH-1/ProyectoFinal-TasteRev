@@ -1,4 +1,3 @@
-import { Container } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { login } from "../../utilidades/redux/actions/authAction";
 import { GuardarUsuario } from "../../utilidades/redux/actions/usuariosAction";
@@ -24,7 +23,6 @@ function Login() {
 
     const handleSubmit = async () => {
         if (esRegistro) {
-            // Lógica de Registro
             const nuevoUsuario = {
                 nombreUsuario: logueo.nombreUsuario,
                 correo: logueo.correo,
@@ -39,7 +37,6 @@ function Login() {
             });
             
         } else {
-            // Lógica de Inicio de Sesión
             const result = await dispatch(login({
                 nombreUsuario: logueo.nombreUsuario,
                 password: logueo.password
@@ -54,39 +51,40 @@ function Login() {
     }
 
     return (
-        <Container className="mt-5" style={{ maxWidth: "400px" }}>
-            <h1 className="mb-4 text-center">{esRegistro ? "Crear Cuenta" : "Iniciar Sesión"}</h1>
-            
-            <div className="mb-3">
-                <label htmlFor="nombreUsuario">Nombre de usuario: </label><br/>
-                <input type="text" onChange={onChange} name="nombreUsuario" className="form-control" />
-            </div>
-            
-            {/* Solo mostramos el correo si estamos en modo registro */}
-            {esRegistro && (
+        <div className="d-flex justify-content-center align-items-center text-white" style={{ minHeight: "100vh", width: "100vw", backgroundColor: "#121212" }}>
+            <div className="bg-dark p-4 rounded shadow-lg border border-secondary" style={{ width: "100%", maxWidth: "400px" }}>
+                <h1 className="mb-4 text-center">{esRegistro ? "Crear Cuenta" : "Iniciar Sesión"}</h1>
+                
                 <div className="mb-3">
-                    <label htmlFor="correo">Correo electrónico: </label><br/>
-                    <input type="email" onChange={onChange} name="correo" className="form-control" />
+                    <label htmlFor="nombreUsuario">Nombre de usuario: </label><br/>
+                    <input type="text" onChange={onChange} name="nombreUsuario" className="form-control" />
                 </div>
-            )}
+                
+                {esRegistro && (
+                    <div className="mb-3">
+                        <label htmlFor="correo">Correo electrónico: </label><br/>
+                        <input type="email" onChange={onChange} name="correo" className="form-control" />
+                    </div>
+                )}
 
-            <div className="mb-3">
-                <label htmlFor="password"> Contraseña: </label><br/>
-                <input type="password" onChange={onChange} name="password" className="form-control" />
-            </div>
-            
-            <div className="d-grid mt-4">
-                <button onClick={handleSubmit} className="btn btn-success">
-                    {esRegistro ? "Registrarse" : "Entrar al Sistema"}
-                </button>
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="password"> Contraseña: </label><br/>
+                    <input type="password" onChange={onChange} name="password" className="form-control" />
+                </div>
+                
+                <div className="d-grid mt-4">
+                    <button onClick={handleSubmit} className="btn btn-success">
+                        {esRegistro ? "Registrarse" : "Entrar al Sistema"}
+                    </button>
+                </div>
 
-            <div className="text-center mt-3">
-                <button className="btn btn-link" onClick={() => setEsRegistro(!esRegistro)}>
-                    {esRegistro ? "¿Ya tienes cuenta? Inicia sesión aquí" : "¿No tienes cuenta? Regístrate aquí"}
-                </button>
+                <div className="text-center mt-3">
+                    <button className="btn btn-link text-info" onClick={() => setEsRegistro(!esRegistro)}>
+                        {esRegistro ? "¿Ya tienes cuenta? Inicia sesión aquí" : "¿No tienes cuenta? Regístrate aquí"}
+                    </button>
+                </div>
             </div>
-        </Container>
+        </div>
     )
 }
 
