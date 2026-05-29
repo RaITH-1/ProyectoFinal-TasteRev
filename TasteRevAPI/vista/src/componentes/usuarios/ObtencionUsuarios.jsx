@@ -7,8 +7,9 @@ import { EliminadoUsuario, listarUsuarios } from "../../utilidades/redux/actions
 function ObtencionUsuarios({usuarioId}) {
     const dispatch = useDispatch();
     const { usuarios } = useSelector(store => store.usuarios);
+    
     const { usuario } = useSelector(store => store.auth);
-
+    
     useEffect(() => {
         dispatch(listarUsuarios());
     }, [dispatch]);
@@ -28,8 +29,8 @@ function ObtencionUsuarios({usuarioId}) {
             cellRenderer: ({ data }) => (
                 <>
                     <button className="btn btn-warning btn-sm me-2" onClick={() => usuarioId(data.id)}>editar</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
-                    {usuario?.id === 1 && (
+                    {/* Verificamos que sea el Admin ID 1 */}
+                    {Number(usuario?.id) === 1 && (
                         <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
                     )}
                 </>
@@ -41,7 +42,7 @@ function ObtencionUsuarios({usuarioId}) {
         return <h1>Cargando usuarios . . .</h1>
     
     return (
-        <div className="ag-theme-alpine mt-3" style={{ height: 400 }}>
+        <div className="ag-theme-alpine mt-3" style={{ height: 400, width: '100%' }}>
             <AgGridReact
                 rowData={usuarios ?? []}
                 columnDefs={columnas}

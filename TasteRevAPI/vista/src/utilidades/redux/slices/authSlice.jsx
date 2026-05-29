@@ -1,41 +1,28 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { login } from '../actions/authAction';
+import { createSlice } from "@reduxjs/toolkit";
+import { login } from "../actions/authAction"; 
 
-const initialState = {
-    user: null,
-    token: null,
-    loading: false,
-    error: null,
-};
-
-const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: { 
-    logout: (state) => {          
-      state.user  = null;
-      state.token = null;
-      state.error = null;
+export const authSlice = createSlice({
+    name: "auth",
+    initialState: {
+        token: null,
+        usuario: null 
+    },
+    reducers: {
+        logout: (state) => {
+            state.token = null;
+            state.usuario = null;
+        }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(login.fulfilled, (state, action) => {
+            state.token = action.payload.token;
+            state.usuario = action.payload.usuario; 
+        });
     }
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(login.pending, (state) => {
-         state.loading = true; state.error = null;
-      })
-      .addCase(login.fulfilled,  (state, { payload }) => {
-        state.loading = false;
-        state.user    = payload.user;
-        state.token   = payload.token;
-      })
-      .addCase(login.rejected,   (state, { payload }) => {
-        state.loading = false;
-        state.error   = payload;
-      });
-  },
 });
 
-export const selectToken = (state) => state.auth.token;
-
 export const { logout } = authSlice.actions;
+
+export const selectToken = (state) => state.auth.token; 
+
 export default authSlice.reducer;

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { themeQuartz } from "ag-grid-community";
 import { listarSeries, eliminarSerie } from "../../utilidades/redux/actions/seriesAction"; 
 
-function ObtencionSeries({serieId, verResenas, crearResena}) {
+function ObtencionSeries({ serieId, verResenas, crearResena }) {
     const dispatch = useDispatch();
     const { series } = useSelector(store => store.series);
     const { usuario } = useSelector(store => store.auth);
@@ -14,7 +14,7 @@ function ObtencionSeries({serieId, verResenas, crearResena}) {
     }, [dispatch]);
 
     const handleEliminado = (id) => {
-        dispatch(eliminarSerie(id)).then(() => {
+        dispatch(eliminarSerie(id)).then(()=>{
             dispatch(listarSeries());
         })
     }
@@ -28,29 +28,29 @@ function ObtencionSeries({serieId, verResenas, crearResena}) {
             headerName: "Portada", 
             width: 120,
             cellRenderer: ({ value }) => (
-                value 
-                ? <img src={value} alt="Portada" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }} /> 
-                : "Sin imagen"
+                value ? <img src={value} alt="Portada" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }} /> : "Sin imagen"
             )
         },
         {
             headerName: "Acciones",
-            width: 320,
+            width: 380, // <-- Ancho suficiente para los 4 botones
             cellRenderer: ({ data }) => {
-                const esAdmin = usuario?.id === 1;
+                // Las variables están declaradas correctamente DENTRO de la función
+                const esAdmin = Number(usuario?.id) === 1;
                 const esCreador = data.usuarioId === usuario?.id;
-                const puedeEditar = esAdmin || esCreador;
+                const tienePermisos = esAdmin || esCreador;
 
                 return (
                     <>
                         <button className="btn btn-success btn-sm me-2" onClick={() => crearResena(data.id)}>+ Reseña</button>
                         <button className="btn btn-info btn-sm me-2 text-white" onClick={() => verResenas(data.id)}>Ver críticas</button>
                         
-                        {puedeEditar && (
-                            <button className="btn btn-warning btn-sm me-2" onClick={() => serieId(data.id)}>editar</button>
-                        )}
-                        {esAdmin && (
-                            <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
+                        {/* Renderizado condicional usando la variable */}
+                        {tienePermisos && (
+                            <>
+                                <button className="btn btn-warning btn-sm me-2" onClick={() => serieId(data.id)}>editar</button>
+                                <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
+                            </>
                         )}
                     </>
                 )

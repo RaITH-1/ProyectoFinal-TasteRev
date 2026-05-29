@@ -7,7 +7,10 @@ function Inicio() {
     const dispatch = useDispatch();
 
     const { usuario } = useSelector(store => store.auth); 
-    const esAdmin = usuario?.id === 1; // Solo el ID 1 es administrador
+    
+    console.log("Usuario en Inicio:", usuario);
+
+    const esAdmin = Number(usuario?.id) === 1;
 
     const handleCerrarSesion = () => {
         dispatch(logout());
@@ -21,10 +24,17 @@ function Inicio() {
             </div>
             
             <h1 className="mb-4">Bienvenido a TasteRev</h1>
-            <p className="lead mb-5">Selecciona el catálogo que deseas administrar:</p>
+            <p className="lead mb-2">Selecciona el catálogo que deseas administrar:</p>
+            
+            <div className="alert alert-warning d-inline-block mb-5 text-start">
+                <strong>🔧 Datos de Depuración:</strong><br/>
+                ID actual: <b>{usuario?.id || 'No hay ID'}</b> <br/>
+                Nombre: <b>{usuario?.nombreUsuario || 'No hay nombre'}</b> <br/>
+                ¿Es Admin según el código?: <b>{esAdmin ? 'SÍ ✅' : 'NO ❌'}</b>
+            </div>
+            {/* --------------------------- */}
             
             <div className="row justify-content-center gap-3">
-                {/* RENDERIZADO CONDICIONAL: Solo si esAdmin es true, se muestra esta columna */}
                 {esAdmin && (
                     <div className="col-md-3">
                         <div className="card shadow-sm h-100">
