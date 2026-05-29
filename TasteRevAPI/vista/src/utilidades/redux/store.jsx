@@ -3,6 +3,8 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import authReducer from './slices/authSlice';
 import { usuariosReducer } from './slices/usuariosSlice';
+import seriesReducer from "./slices/seriesSlice";
+import resenasReducer from "./slices/resenasSlice";
 
 const persistConfig = {
   key: 'auth',
@@ -15,7 +17,9 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
-    usuarios: usuariosReducer
+    usuarios: usuariosReducer,
+    series: seriesReducer, 
+    resenas: resenasReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

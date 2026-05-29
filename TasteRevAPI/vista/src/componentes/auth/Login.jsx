@@ -6,42 +6,53 @@ import { useState } from "react";
 
 function Login() {
     const dispatch = useDispatch();
-    const navigate = useNavigate()  
+    const navigate = useNavigate();  
+    
     const [logueo, setLogueo] = useState({
-        nombreUsuario: '',
-        contraseña: ''
+        nombreUsuario: '', 
+        password: ''  
     });
 
     function onChange(e){
         const { name , value } = e.target;
-
-        setLogueo( (estado) => ({
-            ...estado,
-            [name] : value
-        })) 
+        setLogueo( (estado) => ({ ...estado, [name] : value }));
     }
 
     const handleInicioSesion = async () => {
-        const result = await dispatch(login(logueo))
+        const result = await dispatch(login(logueo));
 
         if (login.fulfilled.match(result)) {
-            navigate('/usuarios');
+            navigate('/inicio');
+        } else {
+            alert("Credenciales incorrectas o el servidor no está respondiendo.");
         }
     }
 
     return (
-        <Container>
-            <h1>Log in</h1>
-            <div>
+        <Container className="mt-5" style={{ maxWidth: "400px" }}>
+            <h1 className="mb-4 text-center">Iniciar Sesión</h1>
+            <div className="mb-3">
                 <label htmlFor="nombreUsuario">Nombre de usuario: </label><br/>
-                <input type="text" onChange={onChange} name="nombreUsuario"/>
+                <input 
+                    type="text" 
+                    onChange={onChange} 
+                    name="nombreUsuario" 
+                    className="form-control"
+                />
             </div>
-            <div>
-                <label htmlFor="contraseña"> Contraseña: </label><br/>
-                <input type="password" onChange={onChange} name="contraseña"/>
+            <div className="mb-3">
+                <label htmlFor="password"> Contraseña: </label><br/>
+                <input 
+                    type="password" 
+                    onChange={onChange} 
+                    name="password" 
+                    className="form-control"
+                />
             </div>
-            <div style={{padding: "10px"}}>
-                <button onClick={handleInicioSesion} className="btn btn-success">Iniciar sesion</button>
+            <div className="d-grid mt-4">
+                <button onClick={handleInicioSesion} className="btn btn-success">
+                    Entrar al Sistema
+                </button>
             </div>
         </Container>
     )
