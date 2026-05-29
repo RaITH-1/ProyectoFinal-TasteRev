@@ -2,15 +2,15 @@ import { useState } from "react";
 import { guardarResena } from "../../utilidades/redux/actions/resenasAction";
 import { useDispatch, useSelector } from "react-redux";
 
-function FormularioResena({ regresar }) {
+function FormularioResena({ regresar, serieIdParam}) {
     const dispatch = useDispatch();
     const { usuario } = useSelector(store => store.auth); // Sacamos el ID del usuario logueado
 
     const [resena, setResena] = useState({
         calificacion: 1,
         comentario: '',
-        usuarioId: usuario?.id || 0, // Asignación automática
-        serieId: 0
+        usuarioId: usuario?.id || 0,
+        serieId: serieIdParam || 0
     });
 
     function guardar() {

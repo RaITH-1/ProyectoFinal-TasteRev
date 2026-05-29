@@ -3,6 +3,7 @@ import ObtencionSeries from "./ObtencionSeries";
 import ModificarSerieFormulario from "./ModificarSerie";
 import FormularioSerie from "./GuardarSerie";
 import ResenasDeSerie from "./ResenasDeSerie";
+import FormularioResena from "../resenas/GuardarResena"; 
 
 import { logout } from "../../utilidades/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
@@ -14,15 +15,12 @@ function Series() {
     
     const [verFormulario, setFormulario] = useState(false);
     const [serieId, setSerieId] = useState(0);
-    const [serieResenasId, setSerieResenasId] = useState(0);
+    const [serieResenasId, setSerieResenasId] = useState(0); 
+    
+    const [crearResenaSerieId, setCrearResenaSerieId] = useState(0); 
 
     const handleCerrarSesion = () => { dispatch(logout()); navigate('/login'); }
-    
-    const handleEditar = (id) => { setSerieId(id); setFormulario(true); }
     const handleRegresar = () => { setSerieId(0); setFormulario(false); }
-
-    // Controladores del nuevo botón
-    const handleVerResenas = (id) => setSerieResenasId(id);
     const handleRegresarResenas = () => setSerieResenasId(0);
 
     return(
@@ -32,15 +30,18 @@ function Series() {
                 <button className="btn btn-danger" onClick={handleCerrarSesion}>Cerrar Sesión</button>
             </div>
 
-            {/* LÓGICA DE PANTALLAS */}
-            { serieResenasId > 0 ? (
-                // 1. Si presionaron "Ver Reseñas", mostramos la lista de la comunidad
-                <ResenasDeSerie 
-                    serieId={serieResenasId} 
-                    regresar={handleRegresarResenas} 
-                />
+            { crearResenaSerieId > 0 ? (
+                <>
+                    <h1>Escribir Reseña</h1>
+                    <button className="btn btn-secondary mb-3" onClick={() => setCrearResenaSerieId(0)}>Cancelar</button>
+                    <FormularioResena 
+                        regresar={() => setCrearResenaSerieId(0)} 
+                        serieIdParam={crearResenaSerieId} 
+                    />
+                </>
+            ) : serieResenasId > 0 ? (
+                <ResenasDeSerie serieId={serieResenasId} regresar={handleRegresarResenas} />
             ) : verFormulario ? (
-                // 2. Si están editando o creando una serie
                 serieId > 0 ? (
                     <>
                         <h1>Modificar Serie</h1>
@@ -55,13 +56,13 @@ function Series() {
                     </>
                 )
             ) : (
-                // 3. Pantalla principal: La tabla de Series
                 <>
                     <h1>Catálogo de Series</h1>
                     <button className="btn btn-primary mb-3" onClick={() => setFormulario(true)}> + Nueva Serie</button>
                     <ObtencionSeries 
-                        serieId={handleEditar}
-                        verResenas={handleVerResenas}
+                        serieId={(id) => { setSerieId(id); setFormulario(true); }}
+                        verResenas={(id) => setSerieResenasId(id)}
+                        crearResena={(id) => setCrearResenaSerieId(id)} // 4. Pasamos la función al botón
                     />
                 </>
             )}

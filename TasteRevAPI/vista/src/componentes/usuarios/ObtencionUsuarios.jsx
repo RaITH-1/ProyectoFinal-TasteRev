@@ -7,7 +7,8 @@ import { EliminadoUsuario, listarUsuarios } from "../../utilidades/redux/actions
 function ObtencionUsuarios({usuarioId}) {
     const dispatch = useDispatch();
     const { usuarios } = useSelector(store => store.usuarios);
-    
+    const { usuario } = useSelector(store => store.auth);
+
     useEffect(() => {
         dispatch(listarUsuarios());
     }, [dispatch]);
@@ -28,6 +29,9 @@ function ObtencionUsuarios({usuarioId}) {
                 <>
                     <button className="btn btn-warning btn-sm me-2" onClick={() => usuarioId(data.id)}>editar</button>
                     <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
+                    {usuario?.id === 1 && (
+                        <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
+                    )}
                 </>
             )
         }

@@ -3,16 +3,29 @@ import ObtencionUsuarios from "./ObtencionUsuarios";
 import ModificarUsuarioFormulario from "./ModificarUsuario";
 import { Button } from "react-bootstrap";
 import { logout } from "../../utilidades/redux/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import FormularioUsuario from "./GuardarUsuario";
 
 function Usuarios() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { usuario } = useSelector(store => store.auth);
     const [verFormulario, setFormulario] = useState(false);
     const [usuarioId, setUsuarioId] = useState(0);
 
+    const esAdmin = usuario?.id === 1;
+
+    if (!esAdmin) {
+        return (
+            <div className="container mt-5 text-center">
+                <h2 className="text-danger">Acceso Denegado</h2>
+                <p>No tienes permisos de administrador para ver esta página.</p>
+                <Link to="/inicio" className="btn btn-primary mt-3">Volver al Inicio</Link>
+            </div>
+        );
+    }
+    
     const handleCerrarSesion = () =>{
         dispatch(logout());
         navigate('/login');

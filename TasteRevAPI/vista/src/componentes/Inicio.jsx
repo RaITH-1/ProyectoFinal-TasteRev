@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../utilidades/redux/slices/authSlice";
 
 function Inicio() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const { usuario } = useSelector(store => store.auth); 
+    const esAdmin = usuario?.id === 1; // Solo el ID 1 es administrador
 
     const handleCerrarSesion = () => {
         dispatch(logout());
@@ -21,16 +24,18 @@ function Inicio() {
             <p className="lead mb-5">Selecciona el catálogo que deseas administrar:</p>
             
             <div className="row justify-content-center gap-3">
-                {/* Tarjeta de Usuarios */}
-                <div className="col-md-3">
-                    <div className="card shadow-sm h-100">
-                        <div className="card-body d-flex flex-column">
-                            <h5 className="card-title">👥 Usuarios</h5>
-                            <p className="card-text flex-grow-1">Gestiona los accesos, correos y cuentas del sistema.</p>
-                            <button className="btn btn-primary w-100 mt-auto" onClick={() => navigate('/usuarios')}>Ir a Usuarios</button>
+                {/* RENDERIZADO CONDICIONAL: Solo si esAdmin es true, se muestra esta columna */}
+                {esAdmin && (
+                    <div className="col-md-3">
+                        <div className="card shadow-sm h-100">
+                            <div className="card-body d-flex flex-column">
+                                <h5 className="card-title">👥 Usuarios</h5>
+                                <p className="card-text flex-grow-1">Gestiona los accesos, correos y cuentas del sistema.</p>
+                                <button className="btn btn-primary w-100 mt-auto" onClick={() => navigate('/usuarios')}>Ir a Usuarios</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
                 
                 {/* Tarjeta de Series */}
                 <div className="col-md-3">

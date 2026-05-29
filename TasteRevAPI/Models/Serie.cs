@@ -6,6 +6,7 @@
         public string Titulo { get; set; } = string.Empty;
         public string Sinopsis { get; set; } = string.Empty;
         public string ImagenUrl { get; set; } = string.Empty;
+        public int UsuarioId { get; set; }
 
         //Una serie puede tener muchas reseñas
         public List<Resena> Resenas { get; set; } = new List<Resena>();

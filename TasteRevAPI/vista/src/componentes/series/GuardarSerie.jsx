@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { guardarSerie } from "../../utilidades/redux/actions/seriesAction";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 function FormularioSerie({ regresar }) {
     const dispatch = useDispatch();
+    const { usuario } = useSelector(store => store.auth);
     const [serie, setSerie] = useState({
         titulo: '',
         sinopsis: '',
-        imagenUrl: ''
+        imagenUrl: '',
+        usuarioId: usuario?.id || 0
     });
 
     function guardar() {
