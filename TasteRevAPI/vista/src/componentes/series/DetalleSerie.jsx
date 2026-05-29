@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listarSeries } from "../../utilidades/redux/actions/seriesAction";
 import { listarResenas } from "../../utilidades/redux/actions/resenasAction";
+import { listarUsuarios } from "../../utilidades/redux/actions/usuariosAction";
 
 function DetalleSerie() {
     const { id } = useParams(); 
@@ -11,10 +12,12 @@ function DetalleSerie() {
 
     const { series } = useSelector(store => store.series);
     const { resenas } = useSelector(store => store.resenas);
+    const { usuarios } = useSelector(store => store.usuarios);
 
     useEffect(() => {
         dispatch(listarSeries());
         dispatch(listarResenas());
+        dispatch(listarUsuarios());
     }, [dispatch]);
 
 
@@ -68,7 +71,15 @@ function DetalleSerie() {
                                 <div key={r.id} className="list-group-item bg-dark text-white border-secondary mb-2 rounded shadow-sm">
                                     <div className="d-flex justify-content-between align-items-center mb-2">
                                         <h5 className="text-warning m-0 fw-bold">⭐ {r.calificacion}/10</h5>
-                                        <small className="text-muted">ID de Usuario: {r.usuarioId}</small>
+                                        <small className="text-muted">
+                                            Por: <span 
+                                                className="text-info fw-bold" 
+                                                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                                                onClick={() => navigate(`/perfil/${r.usuarioId}`)}
+                                                >
+                                                {usuarios?.find(u => u.id === r.usuarioId)?.nombreUsuario || `Usuario Desconocido`}
+                                            </span>
+                                        </small>
                                     </div>
                                     <p className="mb-0 fs-6">{r.comentario}</p>
                                 </div>

@@ -9,6 +9,7 @@ import Series from './componentes/series';
 import Resenas from './componentes/resenas';
 import Inicio from './componentes/Inicio';
 import DetalleSerie from './componentes/series/DetalleSerie';
+import Perfil from './componentes/usuarios/Perfil';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
           <Route path="/inicio" element={<Inicio />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/series" element={<Series />} />
-          <Route path="/resenas" element={<Resenas />} />
+          <Route path="/perfil/:id" element={<Perfil />} />
           
           <Route path="/detalle/:id" element={<DetalleSerie />} />
           <Route path="/" element={<Navigate to="/inicio" replace />} />

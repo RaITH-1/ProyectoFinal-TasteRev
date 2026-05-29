@@ -1,16 +1,20 @@
 import { useEffect } from "react";
-import { AgGridReact } from "ag-grid-react";
 import { useDispatch, useSelector } from "react-redux";
-import { themeQuartz } from "ag-grid-community";
+import { useNavigate } from "react-router-dom";
 import { listarSeries, eliminarSerie } from "../../utilidades/redux/actions/seriesAction"; 
+import { listarResenas } from "../../utilidades/redux/actions/resenasAction";
 
 function ObtencionSeries({ serieId, verResenas, crearResena }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    
     const { series } = useSelector(store => store.series);
+    const { resenas } = useSelector(store => store.resenas);
     const { usuario } = useSelector(store => store.auth);
     
     useEffect(() => {
         dispatch(listarSeries());
+        dispatch(listarResenas());
     }, [dispatch]);
 
     const handleEliminado = (id) => {
@@ -19,57 +23,92 @@ function ObtencionSeries({ serieId, verResenas, crearResena }) {
         })
     }
 
-    const columnas = [
-        { field: "id", headerName: "ID", width: 70 },
-        { field: "titulo", headerName: "Título", flex: 1 },
-        { field: "sinopsis", headerName: "Sinopsis", flex: 2 },
-        { 
-            field: "imagenUrl", 
-            headerName: "Portada", 
-            width: 120,
-            cellRenderer: ({ value }) => (
-                value ? <img src={value} alt="Portada" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }} /> : "Sin imagen"
-            )
-        },
-        {
-            headerName: "Acciones",
-            width: 380, // <-- Ancho suficiente para los 4 botones
-            cellRenderer: ({ data }) => {
-                // Las variables están declaradas correctamente DENTRO de la función
-                const esAdmin = Number(usuario?.id) === 1;
-                const esCreador = data.usuarioId === usuario?.id;
-                const tienePermisos = esAdmin || esCreador;
+    const calcularStats = (idSerie) => {
+        const resSerie = resenas?.filter(r => r.serieId === idSerie) || [];
+        const cantidad = resSerie.length;
+        const promedio = cantidad > 0 
+            ? (resSerie.reduce((acc, curr) => acc + curr.calificacion, 0) / cantidad).toFixed(1) 
+            : 0;
+        return { cantidad, promedio };
+    }
 
-                return (
-                    <>
-                        <button className="btn btn-success btn-sm me-2" onClick={() => crearResena(data.id)}>+ Reseña</button>
-                        <button className="btn btn-info btn-sm me-2 text-white" onClick={() => verResenas(data.id)}>Ver críticas</button>
-                        
-                        {/* Renderizado condicional usando la variable */}
-                        {tienePermisos && (
-                            <>
-                                <button className="btn btn-warning btn-sm me-2" onClick={() => serieId(data.id)}>editar</button>
-                                <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
-                            </>
-                        )}
-                    </>
-                )
-            }
-        }
-    ];
-    
     if(!series || series.length === 0)
-        return <h1>Cargando series . . .</h1>
-    
+        return <h4 className="mt-4 text-white">Cargando catálogo...</h4>
+
     return (
-        <div className="ag-theme-alpine mt-3" style={{ height: 400, width: '100%' }}>
-            <AgGridReact
-                rowData={series ?? []}
-                columnDefs={columnas}
-                theme={themeQuartz}
-                rowHeight={80}
-                overlayNoRowsTemplate="No hay series registradas"
-            />
+        <div className="mt-4">
+            <div className="row g-4">
+                {series.map(serie => {
+                    const esAdmin = Number(usuario?.id) === 1;
+                    const esCreador = Number(serie.usuarioId) === Number(usuario?.id);
+                    const tienePermisos = esAdmin || esCreador;
+                    const stats = calcularStats(serie.id);
+
+                    return (
+                        <div className="col-12 col-xl-10 offset-xl-1" key={serie.id}>
+                            <div className="card bg-dark text-white border-secondary shadow-sm overflow-hidden h-100">
+                                <div className="row g-0">
+                                    
+                                    <div 
+                                        className="col-12 col-md-4 col-lg-3 bg-black text-center" 
+                                        style={{ cursor: 'pointer', borderRight: '1px solid #495057' }} 
+                                        onClick={() => navigate(`/detalle/${serie.id}`)}
+                                    >
+                                        <img 
+                                            src={serie.imagenUrl || "https://via.placeholder.com/300x400?text=Sin+Imagen"} 
+                                            className="img-fluid" 
+                                            style={{ height: '280px', width: '100%', objectFit: 'cover' }}
+                                            alt={serie.titulo}
+                                        />
+                                    </div>
+                                    
+                                    <div className="col-12 col-md-8 col-lg-9">
+                                        <div className="card-body d-flex flex-column h-100 p-4">
+                                            
+                                            <div className="d-flex justify-content-between align-items-start mb-2">
+                                                <div>
+                                                    <h3 
+                                                        className="card-title fw-bold text-info mb-2" 
+                                                        style={{ cursor: 'pointer' }}
+                                                        onClick={() => navigate(`/detalle/${serie.id}`)}
+                                                    >
+                                                        {serie.titulo}
+                                                    </h3>
+                                                    <span className="badge bg-secondary text-light px-3 py-2 fs-6">{serie.genero || 'Sin Género'}</span>
+                                                </div>
+                                                
+                                                <div className="text-end text-nowrap ms-3">
+                                                    <span className="badge bg-warning text-dark fs-5 mb-1">
+                                                        ⭐ {stats.promedio > 0 ? stats.promedio : '--'} / 10
+                                                    </span>
+                                                    <p className="text-muted small m-0 mt-1">📝 {stats.cantidad} reseñas</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <p className="card-text text-light mt-3 fs-5" 
+                                               style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.5' }}>
+                                                {serie.sinopsis}
+                                            </p>
+
+                                            <div className="mt-auto pt-3 border-top border-secondary d-flex gap-2 flex-wrap">
+                                                <button className="btn btn-success" onClick={(e) => { e.stopPropagation(); crearResena(serie.id); }}>+ Añadir Reseña</button>
+                                                
+                                                {tienePermisos && (
+                                                    <>
+                                                        <button className="btn btn-warning" onClick={(e) => { e.stopPropagation(); serieId(serie.id); }}>Editar</button>
+                                                        <button className="btn btn-danger" onClick={(e) => { e.stopPropagation(); handleEliminado(serie.id); }}>Eliminar</button>
+                                                    </>
+                                                )}
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }

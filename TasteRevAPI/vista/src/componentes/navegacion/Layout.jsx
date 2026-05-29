@@ -48,8 +48,8 @@ function Layout() {
                         📺 {menuAbierto && 'Catálogo de Series'}
                     </Link>
                     
-                    <Link to="/resenas" className="btn btn-dark text-start border-0">
-                        ⭐ {menuAbierto && 'Mis Reseñas'}
+                    <Link to={`/perfil/${usuario?.id}`} className="btn btn-dark text-start border-0 fs-5 d-flex align-items-center gap-3" title="Mi Perfil">
+                        👤 {menuAbierto && <span>Mi Perfil</span>}
                     </Link>
 
                     {esAdmin && (

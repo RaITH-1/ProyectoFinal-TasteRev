@@ -1,50 +1,67 @@
 import { useEffect } from "react";
-import { AgGridReact } from "ag-grid-react";
 import { useDispatch, useSelector } from "react-redux";
-import { themeQuartz } from "ag-grid-community";
-import { listarResenas, eliminarResena } from "../../utilidades/redux/actions/resenasAction"; 
+import { listarResenas, eliminarResena } from "../../utilidades/redux/actions/resenasAction";
+import { listarSeries } from "../../utilidades/redux/actions/seriesAction"; 
+import { useNavigate } from "react-router-dom";
 
 function ObtencionResenas({ resenaId }) {
     const dispatch = useDispatch();
-    const { resenas } = useSelector(store => store.resenas);
-    // Obtenemos al usuario logueado desde Redux
-    const { usuario } = useSelector(store => store.auth); 
+    const navigate = useNavigate();
     
+    const { resenas } = useSelector(store => store.resenas);
+    const { series } = useSelector(store => store.series);
+    const { usuario } = useSelector(store => store.auth);
+
     useEffect(() => {
         dispatch(listarResenas());
+        dispatch(listarSeries());
     }, [dispatch]);
 
     const handleEliminado = (id) => {
-        dispatch(eliminarResena(id)).then(() => dispatch(listarResenas()));
+        dispatch(eliminarResena(id)).then(() => {
+            dispatch(listarResenas());
+        });
     }
 
-    // FILTRO: Solo dejamos las reseñas que coincidan con el ID del usuario logueado
-    const misResenas = resenas ? resenas.filter(r => r.usuarioId === usuario?.id) : [];
+    const misResenas = resenas?.filter(r => r.usuarioId === usuario?.id) || [];
 
-    const columnas = [
-        { field: "id", headerName: "ID", width: 70 },
-        { field: "calificacion", headerName: "Calificación", width: 120 },
-        { field: "comentario", headerName: "Comentario", flex: 2 },
-        { field: "serieId", headerName: "ID Serie", width: 120 },
-        {
-            headerName: "Acciones",
-            cellRenderer: ({ data }) => (
-                <>
-                    <button className="btn btn-warning btn-sm me-2" onClick={() => resenaId(data.id)}>editar</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(data.id)}>eliminar</button>
-                </>
-            )
-        }
-    ];
-    
+    if (!misResenas || misResenas.length === 0)
+        return <div className="alert alert-dark border-secondary text-light mt-4">Aún no has escrito ninguna reseña. ¡Anímate a calificar una serie!</div>;
+
     return (
-        <div className="ag-theme-alpine mt-3" style={{ height: 400, width: '100%' }}>
-            <AgGridReact
-                rowData={misResenas} // Inyectamos la lista filtrada
-                columnDefs={columnas}
-                theme={themeQuartz}
-                overlayNoRowsTemplate="No tienes reseñas registradas aún"
-            />
+        <div className="mt-4">
+            <div className="row g-4">
+                {misResenas.map(r => {
+                    const serieInfo = series?.find(s => s.id === r.serieId);
+
+                    return (
+                        <div className="col-12 col-md-6" key={r.id}>
+                            <div className="card bg-dark text-light border-secondary shadow-sm h-100">
+                                <div className="card-header border-secondary d-flex justify-content-between align-items-center">
+                                    <h5 
+                                        className="mb-0 text-info fw-bold text-truncate" 
+                                        style={{ cursor: 'pointer', maxWidth: '75%' }} 
+                                        onClick={() => navigate(`/detalle/${r.serieId}`)}
+                                        title={serieInfo?.titulo}
+                                    >
+                                        📺 {serieInfo?.titulo || 'Serie Desconocida'}
+                                    </h5>
+                                    <span className="badge bg-warning text-dark fs-6">⭐ {r.calificacion}/10</span>
+                                </div>
+                                
+                                <div className="card-body">
+                                    <p className="card-text mb-0 fs-5">{r.comentario}</p>
+                                </div>
+                                
+                                <div className="card-footer border-secondary text-end pb-3">
+                                    <button className="btn btn-warning btn-sm me-2" onClick={() => resenaId(r.id)}>Editar</button>
+                                    <button className="btn btn-danger btn-sm" onClick={() => handleEliminado(r.id)}>Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }
