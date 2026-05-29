@@ -18,11 +18,6 @@ function Resenas() {
 
     return(
         <>
-            <div style={{display: "flex", justifyContent: "space-between", marginBottom: "20px"}}>
-                <Link to="/inicio" className="btn btn-secondary">🏠 Volver al Inicio</Link>
-                <button className="btn btn-danger" onClick={handleCerrarSesion}>Cerrar Sesión</button>
-            </div>
-
             { verFormulario && resenaId > 0 ? (
                 <>
                     <h1>Modificar Reseña</h1>

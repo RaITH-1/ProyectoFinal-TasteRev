@@ -25,11 +25,6 @@ function Series() {
 
     return(
         <>
-            <div style={{display: "flex", justifyContent: "space-between", marginBottom: "20px"}}>
-                <Link to="/inicio" className="btn btn-secondary">🏠 Volver al Inicio</Link>
-                <button className="btn btn-danger" onClick={handleCerrarSesion}>Cerrar Sesión</button>
-            </div>
-
             { crearResenaSerieId > 0 ? (
                 <>
                     <h1>Escribir Reseña</h1>
