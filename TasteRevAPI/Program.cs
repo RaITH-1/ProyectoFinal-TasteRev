@@ -12,6 +12,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configuración de CORS para permitir peticiones desde el Frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirFrontend", policy =>
+    {
+        policy.AllowAnyOrigin()   // Permite peticiones desde cualquier dirección
+              .AllowAnyMethod()   // Permite GET, POST, PUT, DELETE
+              .AllowAnyHeader();  // Permite cualquier tipo de cabecera
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,6 +35,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+// CORRIENTE DE SEGURIDAD: Activar CORS antes de los controladores
+app.UseCors("PermitirFrontend");
 
 app.MapControllers();
 
